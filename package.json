@@ -1,0 +1,22 @@
+{
+  "name": "employeemanagementsystem",
+  "version": "1.0.0",
+  "description": "Employee Managament System with mySQL, node, and js",
+  "main": "ems.js",
+  "scripts": {
+    "test": "node ems.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kkwoka/EmployeeManagementSystem.git"
+  },
+  "author": "kendra kwoka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kkwoka/EmployeeManagementSystem/issues"
+  },
+  "homepage": "https://github.com/kkwoka/EmployeeManagementSystem#readme",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}
