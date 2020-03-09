@@ -51,6 +51,7 @@ function questionsPrompt() {
 
       case 'Add Employee':
       addEmployee();
+      // this works!
       break;
 
       case 'View All Employees':
@@ -138,17 +139,17 @@ function addRoles() {
     {
       type: 'input',
       name: 'addTitle',
-      message: 'What role would you like to add?'
+      message: 'What is the title of the role you would like to add?'
     },
     {
       type: 'input',
       name: 'addSalary',
-      message: 'What role would you like to add?'
+      message: 'What is the salary of the role you would like to add?'
     },
     {
       type: 'input',
       name: 'addDepartmentId',
-      message: 'What role would you like to add?'
+      message: 'What is the department ID of the role you would like to add?'
     }
   ]).then(function(answer) {
     console.log(answer.addRole);
@@ -166,21 +167,38 @@ function addRoles() {
 // Add employees
 function addEmployee() {
   console.log("Adding employee... \n");
-  let query = connection.query(
-    "INSERT INTO employee SET ?",
+  inquirer.prompt([
     {
-      first_name: "Jessie",
-      last_name: "Jones",
-      role_id: 10,
-      manager_id: 32
+      type: 'input',
+      name: 'addFirst',
+      message: 'What is first name of the employee you would like to add?'
     },
-    function(err, res) {
-      if (err) throw err;
-      console.log(res.affectedRows = " employee inserted!\n");
+    {
+      type: 'input',
+      name: 'addLast',
+      message: 'What is last name of the employee you would like to add?'
+    },
+    {
+      type: 'input',
+      name: 'AddRoleId',
+      message: 'What is role ID of the employee you would like to add?'
+    },
+    {
+      type: 'input',
+      name: 'addManagerId',
+      message: 'What is mangager ID of the employee you would like to add?'
     }
-  );
-  console.log(query.sql);
-}
+  ]).then(function(answer) {
+    let query = connection.query(
+      `INSERT INTO employee (first_name, last_name, role_id, manager_id) value ('${answer.addFirst}','${answer.addLast}','${answer.AddRoleId}','${answer.addManagerId}')`,
+      function(err, res) {
+        if (err) throw err;
+        console.log(res.affectedRows = `${answer.addFirst},${answer.addLast},${answer.AddRoleId},${answer.addManagerId} department inserted!\n`);
+      });
+      console.log(query.sql);  
+      questionsPrompt();
+    });
+};
 
 // UPDATE SECTION:
 // -------------------------------------------------------
