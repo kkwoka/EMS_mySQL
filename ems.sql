@@ -42,9 +42,22 @@ values ("Sales Lead", 100000, 1),("Salesperson", 80000, 1),("Lead Engineer", 150
 ("Software Engineer", 120000, 3),("Account Manager", 125000, 4),("Accountant", 115000, 4),
 ("Legal Team Lead", 110000, 2),("Lawyer", 180000, 2),("Networking Engineer", 90000, 3);
 
-insert into employee (first_name, last_name, manager_id)
-values ("John", "Doe", null),('Mike', 'Chan', 1),('Ashley', 'Rodriquez', null),('Kevin', 'Tupik', 3),
-('Kunal', 'Singh', null),('Malia', 'Brown', 5),('Sarah', 'Lourd', null),('Tom', 'Allen', 7); 
+insert into employee (first_name, last_name, role_id, manager_id)
+values ("John", "Doe", 1, null),('Mike', 'Chan', 2, 1),('Ashley', 'Rodriquez', 3, null),
+('Kevin', 'Tupik', 4, 3),('Kunal', 'Singh', 5, null),('Malia', 'Brown', 6, 5),
+('Sarah', 'Lourd', 7, null),('Tom', 'Allen', 8, 7); 
 
 -- breaksssss
+
+select employee.id, employee.first_name, employee.last_name, employeeRole.title, department.name, employeerole.salary
+from employee
+left join employeerole on employee.role_id = employeerole.role_id
+left join department on employeerole.department_id = department.department_id
+order by employee.id;
+
+select song, album, top5000.year
+from top5000
+inner join albums on top5000.year = albums.year
+order by albums.year, albums.position;
+
 

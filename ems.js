@@ -80,7 +80,7 @@ function selectDepartment() {
   connection.query("SELECT * FROM department", function(err, res) {
     if (err) throw err;
     for (let i = 0; i < res.length; i++) {
-        console.log(res[i].department_id + " | " + res[i].name)
+        console.table(res[i].department_id + " | " + res[i].name)
     }
     console.log("----------------------");
     questionsPrompt();
@@ -92,7 +92,7 @@ function selectRoles() {
     connection.query("SELECT * FROM employeerole", function(err, res) {
       if (err) throw err;
       for (let i = 0; i < res.length; i++) {
-        console.log(res[i].role_id + " | " + res[i].title + " | " + res[i].salary + " | " + res[i].department_id);
+        console.table(res[i].role_id + " | " + res[i].title + " | " + res[i].salary + " | " + res[i].department_id);
       }    
       console.log("----------------------");
       questionsPrompt();
@@ -101,11 +101,14 @@ function selectRoles() {
 
 // View employees
 function selectEmployee() {
-    connection.query("SELECT * FROM employee", function(err, res) {
+    connection.query(
+      "SELECT employee.id, employee.first_name, employee.last_name, employeeRole.title," +
+      "department.name, employeerole.salary FROM employee left join employeerole on employee.role_id = employeerole.role_id " +
+      "left join department on employeerole.department_id = department.department_id order by employee.id;", function(err, res) {
+
       if (err) throw err;
-      for (let i = 0; i < res.length; i++) {
-        console.log(res[i].id + " | " + res[i].first_name + " | " + res[i].last_name + " | " + res[i].role_id + " | " + res[i].manager_id);
-      }
+      console.table(res);
+      
       console.log("----------------------");
       questionsPrompt();
     });
