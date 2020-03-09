@@ -41,10 +41,12 @@ function questionsPrompt() {
     switch (answers.action) {
       case 'Add Department':
       addDepartment();
+      // this works!
       break;
 
       case 'Add Role':
       addRoles();
+      // this works!
       break;
 
       case 'Add Employee':
@@ -79,41 +81,31 @@ function questionsPrompt() {
 function selectDepartment() {
   connection.query("SELECT * FROM department", function(err, res) {
     if (err) throw err;
-    for (let i = 0; i < res.length; i++) {
-        console.table(res[i].department_id + " | " + res[i].name)
-    }
-    console.log("----------------------");
+    console.table(res)
     questionsPrompt();
   });
 };
 
 // View roles
 function selectRoles() {
-    connection.query("SELECT * FROM employeerole", function(err, res) {
-      if (err) throw err;
-      for (let i = 0; i < res.length; i++) {
-        console.table(res[i].role_id + " | " + res[i].title + " | " + res[i].salary + " | " + res[i].department_id);
-      }    
-      console.log("----------------------");
-      questionsPrompt();
-    });
-  };
+  connection.query("SELECT * FROM employeerole", function(err, res) {
+    if (err) throw err;
+    console.table(res);
+    questionsPrompt();
+  });
+};
 
 // View employees
 function selectEmployee() {
-    connection.query(
-      "SELECT employee.id, employee.first_name, employee.last_name, employeeRole.title," +
-      "department.name, employeerole.salary FROM employee left join employeerole on employee.role_id = employeerole.role_id " +
-      "left join department on employeerole.department_id = department.department_id order by employee.id;", function(err, res) {
-
-      if (err) throw err;
-      console.table(res);
-      
-      console.log("----------------------");
-      questionsPrompt();
-    });
-  };
-
+  connection.query(
+    "SELECT employee.id, employee.first_name, employee.last_name, employeeRole.title," +
+    "department.name, employeerole.salary FROM employee left join employeerole on employee.role_id = employeerole.role_id " +
+    "left join department on employeerole.department_id = department.department_id order by employee.id;", function(err, res) {
+    if (err) throw err;
+    console.table(res);
+    questionsPrompt();
+  });
+};
 
 // ADD SECTION:
 // -------------------------------------------------------
@@ -127,33 +119,49 @@ function addDepartment() {
       message: 'What department would you like to add?'
     }
   ]).then(function(answer) {
+    console.log(answer.addDepartment);
     let query = connection.query(
-      `INSERT INTO department SET ${answer}`,
+      `INSERT INTO department (name) value ('${answer.addDepartment}')`,
       function(err, res) {
         if (err) throw err;
-        console.log(res.affectedRows = `${answer} department inserted!\n`);
+        console.log(res.affectedRows = `${answer.addDepartment} department inserted!\n`);
       });
+      console.log(query.sql);  
+      questionsPrompt();
     });
-    console.log(query.sql);  
 };
 
 // Add roles
 function addRoles() {
-  console.log("Adding roles... \n");
-  let query = connection.query(
-    "INSERT INTO employeerole SET ?",
+  console.log("Adding role... \n");
+  inquirer.prompt([
     {
-      title: "Secretary",
-      salary: 65000.00,
-      department_id: 4
+      type: 'input',
+      name: 'addTitle',
+      message: 'What role would you like to add?'
     },
-    function(err, res) {
-      if (err) throw err;
-      console.log(res.affectedRows = " role inserted!\n");
+    {
+      type: 'input',
+      name: 'addSalary',
+      message: 'What role would you like to add?'
+    },
+    {
+      type: 'input',
+      name: 'addDepartmentId',
+      message: 'What role would you like to add?'
     }
-  );
-  console.log(query.sql);
-}
+  ]).then(function(answer) {
+    console.log(answer.addRole);
+    let query = connection.query(
+      `INSERT INTO employeerole (title, salary, department_id) value ('${answer.addTitle}','${answer.addSalary}','${answer.addDepartmentId}')`,
+      function(err, res) {
+        if (err) throw err;
+        console.log(res.affectedRows = `${answer.addTitle},${answer.addSalary},${answer.addDepartmentId} department inserted!\n`);
+      });
+      console.log(query.sql);  
+      questionsPrompt();
+    });
+};
 
 // Add employees
 function addEmployee() {
