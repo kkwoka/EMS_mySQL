@@ -78,7 +78,6 @@ function questionsPrompt() {
 
 // VIEW SECTION:
 // -------------------------------------------------------
-// View departments
 function selectDepartment() {
   connection.query("SELECT * FROM department", function(err, res) {
     if (err) throw err;
@@ -87,7 +86,6 @@ function selectDepartment() {
   });
 };
 
-// View roles
 function selectRoles() {
   connection.query("SELECT * FROM employeerole", function(err, res) {
     if (err) throw err;
@@ -96,7 +94,6 @@ function selectRoles() {
   });
 };
 
-// View employees
 function selectEmployee() {
   connection.query(
     "SELECT employee.id, employee.first_name, employee.last_name, employeeRole.title," +
@@ -110,7 +107,6 @@ function selectEmployee() {
 
 // ADD SECTION:
 // -------------------------------------------------------
-// Add departments
 function addDepartment() {
   console.log("Adding department... \n");
   inquirer.prompt([
@@ -132,7 +128,6 @@ function addDepartment() {
     });
 };
 
-// Add roles
 function addRoles() {
   console.log("Adding role... \n");
   inquirer.prompt([
@@ -164,7 +159,6 @@ function addRoles() {
     });
 };
 
-// Add employees
 function addEmployee() {
   console.log("Adding employee... \n");
   inquirer.prompt([
@@ -222,21 +216,3 @@ function updateEmployee() {
   );
   console.log(query.sql);
 }
-
-
-
-
-// function queryDanceSongs() {
-//   connection.query("select * from products where ?", {"genre":"Dance"}, function(err, res) {
-//     // Select *
-//     // from products
-//     // where genre = "Dance" 
-//     // HOW IT LOOKS IN SEQUEL ^^^
-//     if (err) throw err;
-//     for (let i=0; i <res.length; i++) {
-//       console.log(res[i].id + " | " + res[i].title + " | " + res[i].artist + " | " + res[i].genre);
-//     };
-//   });
-//   console.log(query.sql);
-
-// };
