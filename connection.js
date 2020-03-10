@@ -1,4 +1,5 @@
 var mysql = require("mysql");
+const Ems = require("./ems");
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -8,25 +9,10 @@ var connection = mysql.createConnection({
   database: "employeeTracker_db"
 });
 
-// --------------------------------------------
-
 connection.connect(function(err) {
   if (err) throw err;
   console.log("connected as id " + connection.threadId);
-  afterConnection();
-  selectDepartment();
-  selectEmployee();
-  selectRoles();
-  // addDepartment();
-  // addEmployee();
-  // addRoles();
-  updateEmployee();
+  // questionsPrompt();
 });
 
-function afterConnection() {
-    connection.query("SELECT * FROM department", function(err, res) {
-      if (err) throw err;
-      console.log(res);
-      connection.end();
-    });
-  };
+module.exports = connection;

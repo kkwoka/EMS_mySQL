@@ -1,24 +1,7 @@
-var mysql = require("mysql");
+const connection = require("./connection");
 let inquirer = require("inquirer");
 
-var connection = mysql.createConnection({
-  host: "localhost",
-  port: 3306,
-  user: "root",
-  password: "ClimbUSA007",
-  database: "employeeTracker_db"
-});
 
-// --------------------------------------------
-
-connection.connect(function(err) {
-  if (err) throw err;
-  console.log("connected as id " + connection.threadId);
-  questionsPrompt();
-});
-
-// PROMPTS SECTION:
-// -------------------------------------------------------
 function questionsPrompt() {
   return inquirer
   .prompt([
@@ -33,7 +16,8 @@ function questionsPrompt() {
         'View All Employees', 
         'View All Departments', 
         'View All Roles', 
-        'Update Employee Role'
+        'Update Employee Role',
+        'Finish'
       ]
     }
   ])
@@ -41,44 +25,40 @@ function questionsPrompt() {
     switch (answers.action) {
       case 'Add Department':
       addDepartment();
-      // this works!
       break;
 
       case 'Add Role':
       addRoles();
-      // this works!
       break;
 
       case 'Add Employee':
       addEmployee();
-      // this works!
       break;
 
       case 'View All Employees':
       selectEmployee();
-      // this works!
       break;
 
       case 'View All Departments':
       selectDepartment();
-      // this works!
       break;
 
       case 'View All Roles':
       selectRoles();
-      // this works!
       break;
 
       case 'Update Employee Role':
       updateEmployee();
-      // this works!
+      break;
+
+      case 'Finish':
+      finish();
       break;
     }
   });
 };
 
-// VIEW SECTION:
-// -------------------------------------------------------
+
 function selectDepartment() {
   connection.query("SELECT * FROM department", function(err, res) {
     if (err) throw err;
@@ -106,8 +86,7 @@ function selectEmployee() {
   });
 };
 
-// ADD SECTION:
-// -------------------------------------------------------
+
 function addDepartment() {
   console.log("Adding department... \n");
   inquirer.prompt([
@@ -196,9 +175,7 @@ function addEmployee() {
     });
 };
 
-// UPDATE SECTION:
-// -------------------------------------------------------
-// update Employee Roles
+
 function updateEmployee() {
   console.log("Updating employee... \n");
   inquirer.prompt([
@@ -223,3 +200,10 @@ function updateEmployee() {
       questionsPrompt();
   })
 };
+
+function finish() {
+  connection.end();
+};
+
+
+questionsPrompt();
