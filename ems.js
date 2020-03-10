@@ -71,6 +71,7 @@ function questionsPrompt() {
 
       case 'Update Employee Role':
       updateEmployee();
+      // this works!
       break;
     }
   });
@@ -161,6 +162,7 @@ function addRoles() {
 
 function addEmployee() {
   console.log("Adding employee... \n");
+    // allows user to add one employee  at a time. Maybe add an array for adding multiple people to the table....
   inquirer.prompt([
     {
       type: 'input',
@@ -198,21 +200,26 @@ function addEmployee() {
 // -------------------------------------------------------
 // update Employee Roles
 function updateEmployee() {
-  console.log("Updating Employee... \n");
-  let query = connection.query(
-    "Update employeerole set ? where?",
-    [
-      {
-        title: "IT"
-      },
-      {
-        department_id: 5
-      }
-    ],
-    function(err, res) {
-      if (err) throw err;
-      console.log(res.affectedRows + " employee role updated!\n");
+  console.log("Updating employee... \n");
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'setClause',
+      message: 'What role are you inputting?'
+    },
+    {
+      type: 'input',
+      name: 'whereClause',
+      message: 'What is role ID of the employee you are updating?'
     }
-  );
-  console.log(query.sql);
-}
+  ]).then(function(answer) {
+    let query = connection.query(
+      `Update employeerole set title = '${answer.setClause}' where role_id = ${answer.whereClause}`,
+      function(err, res) {
+        if (err) throw err;
+        console.log(res.affectedRows + " employee role updated!\n");
+      });
+      console.log(query.sql);  
+      questionsPrompt();
+  })
+};
