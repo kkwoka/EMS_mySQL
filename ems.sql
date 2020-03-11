@@ -25,13 +25,12 @@ create table employeeRole (
 	role_id int not null auto_increment,
     title varchar(30) not null,
     salary decimal(10, 2),
-    department_id int not null,  -- (FK)
+    department_id int,  -- (FK)
     primary key (role_id),
 	FOREIGN KEY (department_id) REFERENCES department(department_id)
 );
 
 -- breaksssss
--- insert into department, then role, then employee bc of foreign keys!!
 
 insert into department (name)
 values ('Sales'), ('Legal'), ('Engineering'), ('Finance');
@@ -55,9 +54,10 @@ left join employeerole on employee.role_id = employeerole.role_id
 left join department on employeerole.department_id = department.department_id
 order by employee.id;
 
-select song, album, top5000.year
-from top5000
-inner join albums on top5000.year = albums.year
-order by albums.year, albums.position;
+
+-- breaksssss
 
 
+SELECT employee.first_name, employee.last_name, employeeRole.title, employee.manager_id
+FROM employee
+left join employeerole on employee.role_id = employeerole.role_id;
