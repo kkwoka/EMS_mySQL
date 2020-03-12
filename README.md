@@ -2,8 +2,8 @@
 
 
   # EmployeeTracker
-  https://github.com/kkwoka/EmployeeTracker
-  ​
+  https://github.com/kkwoka/EMS_mySQL  ​
+  
   ## Description
   ​
   This uses mySQL, javascript, and node to create / update tables and information listed on them. 
