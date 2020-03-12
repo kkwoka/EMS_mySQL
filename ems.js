@@ -1,6 +1,5 @@
 const connection = require("./connection");
 let inquirer = require("inquirer");
-let allEmployeeData
 
 function questionsPrompt() {
   return inquirer
@@ -76,16 +75,14 @@ function selectRoles() {
 
 function selectEmployee() {
   connection.query(
-    'SELECT employeeRole.role_id, employee.first_name, employee.last_name, employeeRole.title, department.name, employeerole.salary ' +
+    'SELECT employee.id, employee.first_name, employee.last_name, employeeRole.title, department.name, ' +
+    'employeeRole.salary, concat(employee2.first_name, " ", employee2.last_name) manager ' +
     'FROM employee ' +
-    'left join employeerole on employee.id = employeerole.role_id ' +
+    'left join employee employee2 on employee.manager_id = employee2.id ' +
+    'left join employeerole on employee.role_id = employeerole.role_id ' +
     'left join department on employeerole.department_id = department.department_id ' +
-    'order by employee.id',
+    'Order By employee.id',
 
-
-    // "SELECT employee.id, employee.first_name, employee.last_name, employeeRole.title," +
-    // "department.name, employeerole.salary FROM employee left join employeerole on employee.role_id = employeerole.role_id " +
-    // "left join department on employeerole.department_id = department.department_id order by employee.id;", 
     function(err, res) {
     if (err) throw err;
     console.table(res);
@@ -145,8 +142,7 @@ function addEmployee() {
     connection.query(
       "SELECT employee.first_name, employee.last_name, employeeRole.role_id, employeeRole.title, employee.manager_id " +
       "FROM employee " +
-      "left join employeerole on employee.id = employeerole.role_id ", function(err, res) {
-      // allEmployeeData = res
+      "left join employeerole on employee.role_id = employeerole.role_id ", function(err, res) {
       if (err) throw err;
 
       inquirer.prompt([
@@ -154,48 +150,54 @@ function addEmployee() {
           type: 'input',
           name: 'addFirst',
           message: 'What is first name of the employee you would like to add?'
-        },
-        {
+        },{
           type: 'input',
           name: 'addLast',
           message: 'What is last name of the employee you would like to add?'
-        },
-        {
+        },{
           type: 'rawlist',
           name: 'AddRoleId',
           choices: function() {
             let roleArray = [];
             for (let i = 0; i < res.length; i++) {
               if (res[i].title != null) {
-                // console.log('res', res);
                 roleArray.push(res[i].title);
               }
             }
             return roleArray;
           },
-          message: 'What is role of the employee you would like to add?',
-        },
-        {
+          message: 'What is role of the employee you would like to add?'
+        },{
           type: 'rawlist',
           name: 'addManagerId',
           choices: function() {
             let managerArray = [];
             for (let i = 0; i < res.length; i++) {
               if (res[i].manager_id != null) {
-                // console.log('res', res);
                 managerArray.push(res[i].manager_id);
               }
             }
             return managerArray;
           },
-          message: 'Who is mangager of the employee you would like to add?',
+          message: 'Who is mangager of the employee you would like to add?'
         }
       ]).then(function(answer) {
-        console.log("answer:", answer)
-        // console.log(answer.addFirst, answer.addLast, answer.AddRoleId, answer.addManagerId);
+        let roleID = '';
+        if (answer.AddRoleId === 'Salesperson' || answer.AddRoleId === 'Sales Lead') {
+          roleID = 1;
+        }
+        if (answer.AddRoleId === 'Lead Engineer' || answer.AddRoleId === 'Software Engineer') {
+          roleID = 3;
+        }
+        if (answer.AddRoleId === 'Account Manager' || answer.AddRoleId === 'Accountant') {
+          roleID = 4;
+        }
+        if (answer.AddRoleId === 'Legal Team Lead' || answer.AddRoleId === 'Lawyer') {
+          roleID = 2;
+        }
 
         let query = connection.query(
-          `INSERT INTO employee (first_name, last_name, manager_id) value ('${answer.addFirst}','${answer.addLast}', ${answer.addManagerId})`,
+          `INSERT INTO employee (first_name, last_name, role_id, manager_id) value ('${answer.addFirst}','${answer.addLast}', ${roleID}, ${answer.addManagerId})`,
           function(err, res) {
             if (err){ throw err;}
             console.log(res.affectedRows = `${answer.addFirst},${answer.addLast},${answer.addManagerId} inserted!\n`);
@@ -203,23 +205,13 @@ function addEmployee() {
 
         let query2 = connection.query(
           `INSERT INTO employeerole (title) value ('${answer.AddRoleId}')`,
-          
           function(err, res) {
             if (err){ throw err;}
             console.log(res.affectedRows = `${answer.AddRoleId}, ${answer.salary} inserted!\n`);
           });
-
-        // let query3 = connection.query(
-        //   `INSERT INTO employeerole (manager_id) value ('${answer.addManagerId}')`,
-        //   function(err, res) {
-        //     console.log("I'm in")
-        //     if (err){ throw err;}
-        //     console.log(res.affectedRows = `${answer.addManagerId} inserted!\n`);
-        //   });
         
           console.log(query.sql);  
           console.log(query2.sql);  
-          // console.log(query3.sql);  
 
           questionsPrompt();
         })
@@ -227,14 +219,26 @@ function addEmployee() {
     };
 
 function updateEmployee() {
-  // console.log("Updating employee... \n");
+
+  connection.query(
+    "SELECT employeeRole.role_id, employeeRole.title " +
+    "FROM employeerole ", function(err, res) {
+
   inquirer.prompt([
     {
-      type: 'input',
+      type: 'rawlist',
       name: 'setClause',
-      message: 'What role are you inputting?'
-    },
-    {
+      choices: function() {
+        let roleArray = [];
+        for (let i = 0; i < res.length; i++) {
+          if (res[i].title != null) {
+            roleArray.push(res[i].title);
+          }
+        }
+        return roleArray;
+      },
+      message: 'What is the employee\'s new role?'
+    },{
       type: 'input',
       name: 'whereClause',
       message: 'What is role ID of the employee you are updating?'
@@ -249,11 +253,23 @@ function updateEmployee() {
       console.log(query.sql);  
       questionsPrompt();
   })
+});
 };
 
 function finish() {
   connection.end();
 };
 
-
 questionsPrompt();
+
+// ** BONUS PROMPTS
+//     - UPDATE
+//         - employee managers
+
+//     - VIEW
+//         - employees by manager
+
+//     - DELETE
+//         - departments
+//         - roles
+//         - employee

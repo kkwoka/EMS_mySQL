@@ -1,63 +1,46 @@
 # EmployeeManagementSystem
 
-Build a command-line application that at a minimum allows the user to:
 
-    Add departments, roles, employees
+  # EmployeeTracker
+  https://github.com/kkwoka/EmployeeTracker
+  ​
+  ## Description
+  ​
+  This uses mySQL, javascript, and node to create / update tables and information listed on them. 
+  ​
+  ## Table of Contents 
+  * [GIF](#GIF)
 
-    <!-- View departments, roles, employees -->
+  * [Installation](#installation)
+  ​
+  * [Usage](#usage)
+  ​  ​
+  * [Tests](#tests)
+  ​
+  * [Questions](#questions)
 
-    Update employee roles
-
-Bonus points if you're able to:
-
-    Update employee managers
-
-    View employees by manager
-
-    Delete departments, roles, and employees
-
-    View the total utilized budget of a department -- ie the combined salaries of all employees in that department
-
--------------------------
-    connection.js
-
-    Prompts:
-    Will give you seven questions. Each question will lead to the sequel function
-
-    WHAT WOULD YOU LIKE TO DO?: (ADD, VIEW, UPDATE, DELETE)
-    - ADD
-        - departments
-        - roles
-            - ROLE_ID
-            sales Lead
-            salesperson
-            lead engineer
-            software engineer
-            account manager
-            accountant
-            legal team lead
-            lawuer
-            networking engineer
-
-        - employee
-
-    - VIEW
-        - view all employees
-        - departments
-        - roles
-        - roles
-    
-    - UPDATE
-        - employee roles
-
-    ** BONUS PROMPTS
-    - UPDATE
-        - employee managers
-
-    - VIEW
-        - employees by manager
-
-    - DELETE
-        - departments
-        - roles
-        - employee
+  ## GIF
+  ![testgif](Assets/test.gif)
+  ​
+  ## Installation
+  ​
+  To install necessary dependencies, run the following command:
+  ```
+  npm i
+  ```
+  ## Usage
+  ​
+  node, terminal, inquirer
+  ​
+  ## Tests
+  ​
+  To run tests, run the following command:
+  ```
+  node ems.js
+  ```
+ 
+  ## Questions
+  ​
+  <img src="https://avatars3.githubusercontent.com/u/57764303?v=4" alt="avatar" style="border-radius: 16px" width="30" />
+  ​
+  If you have any questions about the repo, contact [kkwoka](https://github.com/kkwoka).
